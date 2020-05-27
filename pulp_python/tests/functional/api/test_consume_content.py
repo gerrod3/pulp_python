@@ -40,7 +40,7 @@ class PipInstallContentTestCase(unittest.TestCase):
         * `Pulp #4677 <https://pulp.plan.io/issues/4677>`_
         """
 
-        cfg = config.get_config()  # can i use self.config?
+        cfg = config.get_config()
         client = api.Client(cfg, api.json_handler)
 
         repo = client.post(PYTHON_REPO_PATH, gen_repo())
@@ -51,7 +51,7 @@ class PipInstallContentTestCase(unittest.TestCase):
         self.addCleanup(client.delete, remote['pulp_href'])
 
         sync(cfg, remote, repo)
-        # repo = client.get(repo['pulp_href']) #what does this line do? commenting out till i know
+        repo = client.get(repo['pulp_href'])
 
         publication = gen_python_publication(cfg, repository=repo)
         self.addCleanup(client.delete, publication['pulp_href'])
@@ -63,27 +63,20 @@ class PipInstallContentTestCase(unittest.TestCase):
             body
         )
         self.addCleanup(client.delete, distribution['pulp_href'])
-        # import pydevd_pycharm
-        # pydevd_pycharm.settrace('localhost', port=3013, stdoutToServer=True, stderrToServer=True)
 
-        #Pip install shelf-reader (look to maybe try other packages and other file types .whl/.gz)
         cli_client = cli.Client(cfg)
-
         # uninstall package before trying to install it
         if self.check_install(cli_client, "shelf-reader"):
             cli_client.run(('pip', 'uninstall', 'shelf-reader', '-y'))
-        
+
         url = "".join([cfg.get_content_host_base_url(),"/pulp/content/", distribution['base_path'], "/simple/"])
-        # pip install --trusted-host localhost -i $CONTENT_ADDR/pulp/content/foo/simple/ shelf-reader
+        # Pip install shelf-reader
         out = cli_client.run(('pip', 'install', '--trusted-host', 'localhost', '-i', url, 'shelf-reader')).stdout
         self.addCleanup(cli_client.run, ('pip', 'uninstall', 'shelf-reader', '-y'))
 
         # check that pip correctly installed
-        # (can search 'out' to see if "Successfully installed" is present
-        # or can run a 'pip list' and check that output for package name)
-        self.assertTrue(self.check_install(cli_client, "shelf-reader"))
+        self.assertTrue(self.check_install(cli_client, "shelf-reader"), out)
 
     def check_install(self, cli_client, package):
         """Returns true if python package is installed, false otherwise"""
-        # may need to lowercase stdout and package name to be safe
         return cli_client.run(('pip', 'list')).stdout.find(package) != -1
