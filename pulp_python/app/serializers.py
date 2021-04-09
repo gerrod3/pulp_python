@@ -6,6 +6,7 @@ import tempfile
 from packaging.requirements import Requirement
 from rest_framework import serializers
 
+from pulpcore.app.serializers import DetailRelatedField
 from pulpcore.plugin import models as core_models
 from pulpcore.plugin import serializers as core_serializers
 
@@ -35,34 +36,22 @@ class PythonDistributionSerializer(core_serializers.PublicationDistributionSeria
         model = python_models.PythonDistribution
 
 
-class PythonPackageContentSerializer(core_serializers.SingleArtifactContentUploadSerializer):
+class PythonPackageSerializer(core_serializers.ModelSerializer):
     """
-    A Serializer for PythonPackageContent.
+    A Serializer for PythonPackage
     """
 
-    filename = serializers.CharField(
-        help_text=_('The name of the distribution package, usually of the format:'
-                    ' {distribution}-{version}(-{build tag})?-{python tag}-{abi tag}'
-                    '-{platform tag}.{packagetype}'),
-        read_only=True,
-    )
-    packagetype = serializers.CharField(
-        help_text=_('The type of the distribution package '
-                    '(e.g. sdist, bdist_wheel, bdist_egg, etc)'),
-        read_only=True,
-    )
+
+
     name = serializers.CharField(
         help_text=_('The name of the python project.'),
         read_only=True,
     )
     version = serializers.CharField(
-        help_text=_('The packages version number.'),
+        help_text=_('The packages latest version number.'),
         read_only=True,
     )
-    metadata_version = serializers.CharField(
-        help_text=_('Version of the file format'),
-        read_only=True,
-    )
+
     summary = serializers.CharField(
         required=False, allow_blank=True,
         help_text=_('A one-line summary of what the package does.')
@@ -120,121 +109,113 @@ class PythonPackageContentSerializer(core_serializers.SingleArtifactContentUploa
         help_text=_('A comma-separated list of platform specifications, '
                     'summarizing the operating systems supported by the package.')
     )
-    supported_platform = serializers.CharField(
-        required=False, allow_blank=True,
-        help_text=_('Field to specify the OS and CPU for which the binary package was compiled. ')
-    )
+
     requires_dist = serializers.JSONField(
         required=False, default=list,
         help_text=_('A JSON list containing names of some other distutils project '
                     'required by this distribution.')
     )
-    provides_dist = serializers.JSONField(
-        required=False, default=list,
-        help_text=_('A JSON list containing names of a Distutils project which is contained'
-                    ' within this distribution.')
-    )
-    obsoletes_dist = serializers.JSONField(
-        required=False, default=list,
-        help_text=_('A JSON list containing names of a distutils project\'s distribution which '
-                    'this distribution renders obsolete, meaning that the two projects should not '
-                    'be installed at the same time.')
-    )
-    requires_external = serializers.JSONField(
-        required=False, default=list,
-        help_text=_('A JSON list containing some dependency in the system that the distribution '
-                    'is to be used.')
-    )
+
     classifiers = serializers.JSONField(
         required=False, default=list,
         help_text=_('A JSON list containing classification values for a Python package.')
     )
 
-    def deferred_validate(self, data):
-        """
-        Validate the python package data.
-
-        Args:
-            data (dict): Data to be validated
-
-        Returns:
-            dict: Data that has been validated
-
-        """
-        data = super().deferred_validate(data)
-
-        try:
-            filename = data["relative_path"]
-        except KeyError:
-            raise serializers.ValidationError(detail={"relative_path": _('This field is required')})
-
-        if python_models.PythonPackageContent.objects.filter(filename=filename):
-            raise serializers.ValidationError(detail={
-                "relative_path": _('This field must be unique')
-            })
-
-        # iterate through extensions since splitext does not support things like .tar.gz
-        for ext, packagetype in DIST_EXTENSIONS.items():
-            if filename.endswith(ext):
-                # Copy file to a temp directory under the user provided filename, we do this
-                # because pkginfo validates that the filename has a valid extension before
-                # reading it
-                with tempfile.TemporaryDirectory() as td:
-                    temp_path = os.path.join(td, filename)
-                    artifact = data["artifact"]
-                    shutil.copy2(artifact.file.path, temp_path)
-                    metadata = DIST_TYPES[packagetype](temp_path)
-                    metadata.packagetype = packagetype
-                    break
-        else:
-            raise serializers.ValidationError(_(
-                "Extension on {} is not a valid python extension "
-                "(.whl, .exe, .egg, .tar.gz, .tar.bz2, .zip)").format(filename)
-            )
-        _data = parse_project_metadata(vars(metadata))
-        _data['packagetype'] = metadata.packagetype
-        _data['version'] = metadata.version
-        _data['filename'] = filename
-
-        data.update(_data)
-
-        new_content = python_models.PythonPackageContent.objects.filter(
-            filename=data['filename'],
-            packagetype=data['packagetype'],
-            name=data['name'],
-            version=data['version']
-        )
-
-        if new_content.exists():
-            raise serializers.ValidationError(
-                _(
-                    "There is already a python package with relative path '{path}'."
-                ).format(path=data["relative_path"])
-            )
-
-        return data
+    # def deferred_validate(self, data):
+    #     """
+    #     Validate the python package data.
+    #
+    #     Args:
+    #         data (dict): Data to be validated
+    #
+    #     Returns:
+    #         dict: Data that has been validated
+    #
+    #     """
+    #     data = super().deferred_validate(data)
+    #
+    #     try:
+    #         filename = data["relative_path"]
+    #     except KeyError:
+    #         raise serializers.ValidationError(detail={"relative_path": _('This field is required')})
+    #
+    #     if python_models.PythonPackageContent.objects.filter(filename=filename):
+    #         raise serializers.ValidationError(detail={
+    #             "relative_path": _('This field must be unique')
+    #         })
+    #
+    #     # iterate through extensions since splitext does not support things like .tar.gz
+    #     for ext, packagetype in DIST_EXTENSIONS.items():
+    #         if filename.endswith(ext):
+    #             # Copy file to a temp directory under the user provided filename, we do this
+    #             # because pkginfo validates that the filename has a valid extension before
+    #             # reading it
+    #             with tempfile.TemporaryDirectory() as td:
+    #                 temp_path = os.path.join(td, filename)
+    #                 artifact = data["artifact"]
+    #                 shutil.copy2(artifact.file.path, temp_path)
+    #                 metadata = DIST_TYPES[packagetype](temp_path)
+    #                 metadata.packagetype = packagetype
+    #                 break
+    #     else:
+    #         raise serializers.ValidationError(_(
+    #             "Extension on {} is not a valid python extension "
+    #             "(.whl, .exe, .egg, .tar.gz, .tar.bz2, .zip)").format(filename)
+    #         )
+    #     _data = parse_project_metadata(vars(metadata))
+    #     _data['packagetype'] = metadata.packagetype
+    #     _data['version'] = metadata.version
+    #     _data['filename'] = filename
+    #
+    #     data.update(_data)
+    #
+    #     new_content = python_models.PythonPackageContent.objects.filter(
+    #         filename=data['filename'],
+    #         packagetype=data['packagetype'],
+    #         name=data['name'],
+    #         version=data['version']
+    #     )
+    #
+    #     if new_content.exists():
+    #         raise serializers.ValidationError(
+    #             _(
+    #                 "There is already a python package with relative path '{path}'."
+    #             ).format(path=data["relative_path"])
+    #         )
+    #
+    #     return data
 
     class Meta:
-        fields = core_serializers.SingleArtifactContentUploadSerializer.Meta.fields + (
-            'filename', 'packagetype', 'name', 'version', 'metadata_version', 'summary',
+        fields =  (
+            'name', 'version', 'summary',
             'description', 'keywords', 'home_page', 'download_url', 'author', 'author_email',
             'maintainer', 'maintainer_email', 'license', 'requires_python', 'project_url',
-            'platform', 'supported_platform', 'requires_dist', 'provides_dist',
-            'obsoletes_dist', 'requires_external', 'classifiers'
+            'platform', 'supported_platform', 'requires_dist',
+            'classifiers'
         )
-        model = python_models.PythonPackageContent
+        model = python_models.PythonPackage
 
 
-class MinimalPythonPackageContentSerializer(PythonPackageContentSerializer):
-    """
-    A Serializer for PythonPackageContent.
-    """
+class PythonPackageContentSerializer(core_serializers.MultipleArtifactContentSerializer):
+
+    name = serializers.CharField(max_length=32, allow_blank=True)
+    count = serializers.IntegerField(default=0)
+    combined_hash = serializers.CharField(max_length=64, read_only=True, allow_blank=True)
 
     class Meta:
-        fields = core_serializers.SingleArtifactContentUploadSerializer.Meta.fields + (
-            'filename', 'packagetype', 'name', 'version',
-        )
+        fields = ('name', 'count', 'combined_hash', 'package')
         model = python_models.PythonPackageContent
+
+# class MinimalPythonPackageContentSerializer(PythonPackageContentSerializer):
+#     """
+#     A Serializer for PythonPackageContent.
+#     """
+#
+#     class Meta:
+#         fields = core_serializers.SingleArtifactContentUploadSerializer.Meta.fields + (
+#             'filename', 'packagetype', 'name', 'version',
+#         )
+#         model = python_models.PythonPackageContent
 
 
 class PythonRemoteSerializer(core_serializers.RemoteSerializer):

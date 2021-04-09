@@ -93,11 +93,7 @@ class PythonPackageContentFilter(core_viewsets.ContentFilter):
         model = python_models.PythonPackageContent
         fields = {
             'name': ['exact', 'in'],
-            'author': ['exact', 'in'],
-            'packagetype': ['exact', 'in'],
-            'requires_python': ['exact', 'in', "contains"],
-            'filename': ['exact', 'in', 'contains'],
-            'keywords': ['in', 'contains'],
+            'count': ['exact'],
         }
 
 
@@ -116,7 +112,7 @@ class PythonPackageSingleArtifactContentUploadViewSet(
     endpoint_name = 'packages'
     queryset = python_models.PythonPackageContent.objects.all()
     serializer_class = python_serializers.PythonPackageContentSerializer
-    minimal_serializer_class = python_serializers.MinimalPythonPackageContentSerializer
+    # minimal_serializer_class = python_serializers.MinimalPythonPackageContentSerializer
     filterset_class = PythonPackageContentFilter
 
 

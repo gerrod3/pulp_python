@@ -18,6 +18,294 @@
         }
     },
     "paths": {
+        "/pulp/api/v3/artifacts/": {
+            "get": {
+                "operationId": "artifacts_list",
+                "description": "A customized named ModelViewSet that knows how to register itself with the Pulp API router.\n\nThis viewset is discoverable by its name.\n\"Normal\" Django Models and Master/Detail models are supported by the ``register_with`` method.\n\nAttributes:\n    lookup_field (str): The name of the field by which an object should be looked up, in\n        addition to any parent lookups if this ViewSet is nested. Defaults to 'pk'\n    endpoint_name (str): The name of the final path segment that should identify the ViewSet's\n        collection endpoint.\n    nest_prefix (str): Optional prefix under which this ViewSet should be nested. This must\n        correspond to the \"parent_prefix\" of a router with rest_framework_nested.NestedMixin.\n        None indicates this ViewSet should not be nested.\n    parent_lookup_kwargs (dict): Optional mapping of key names that would appear in self.kwargs\n        to django model filter expressions that can be used with the corresponding value from\n        self.kwargs, used only by a nested ViewSet to filter based on the parent object's\n        identity.\n    schema (DefaultSchema): The schema class to use by default in a viewset.",
+                "summary": "List artifacts",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "md5",
+                        "required": false,
+                        "in": "query",
+                        "description": "md5",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "repository_version",
+                        "required": false,
+                        "in": "query",
+                        "description": "repository_version",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sha1",
+                        "required": false,
+                        "in": "query",
+                        "description": "sha1",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sha224",
+                        "required": false,
+                        "in": "query",
+                        "description": "sha224",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sha256",
+                        "required": false,
+                        "in": "query",
+                        "description": "sha256",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sha384",
+                        "required": false,
+                        "in": "query",
+                        "description": "sha384",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sha512",
+                        "required": false,
+                        "in": "query",
+                        "description": "sha512",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Artifacts"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ArtifactResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "operationId": "artifacts_create",
+                "description": "A customized named ModelViewSet that knows how to register itself with the Pulp API router.\n\nThis viewset is discoverable by its name.\n\"Normal\" Django Models and Master/Detail models are supported by the ``register_with`` method.\n\nAttributes:\n    lookup_field (str): The name of the field by which an object should be looked up, in\n        addition to any parent lookups if this ViewSet is nested. Defaults to 'pk'\n    endpoint_name (str): The name of the final path segment that should identify the ViewSet's\n        collection endpoint.\n    nest_prefix (str): Optional prefix under which this ViewSet should be nested. This must\n        correspond to the \"parent_prefix\" of a router with rest_framework_nested.NestedMixin.\n        None indicates this ViewSet should not be nested.\n    parent_lookup_kwargs (dict): Optional mapping of key names that would appear in self.kwargs\n        to django model filter expressions that can be used with the corresponding value from\n        self.kwargs, used only by a nested ViewSet to filter based on the parent object's\n        identity.\n    schema (DefaultSchema): The schema class to use by default in a viewset.",
+                "summary": "Create an artifact",
+                "tags": [
+                    "Artifacts"
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Artifact"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Artifact"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ArtifactResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{artifact_href}": {
+            "get": {
+                "operationId": "artifacts_read",
+                "description": "A customized named ModelViewSet that knows how to register itself with the Pulp API router.\n\nThis viewset is discoverable by its name.\n\"Normal\" Django Models and Master/Detail models are supported by the ``register_with`` method.\n\nAttributes:\n    lookup_field (str): The name of the field by which an object should be looked up, in\n        addition to any parent lookups if this ViewSet is nested. Defaults to 'pk'\n    endpoint_name (str): The name of the final path segment that should identify the ViewSet's\n        collection endpoint.\n    nest_prefix (str): Optional prefix under which this ViewSet should be nested. This must\n        correspond to the \"parent_prefix\" of a router with rest_framework_nested.NestedMixin.\n        None indicates this ViewSet should not be nested.\n    parent_lookup_kwargs (dict): Optional mapping of key names that would appear in self.kwargs\n        to django model filter expressions that can be used with the corresponding value from\n        self.kwargs, used only by a nested ViewSet to filter based on the parent object's\n        identity.\n    schema (DefaultSchema): The schema class to use by default in a viewset.",
+                "summary": "Inspect an artifact",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "artifact_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Artifacts"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ArtifactResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "artifacts_delete",
+                "description": "Remove Artifact only if it is not associated with any Content.",
+                "summary": "Delete an artifact",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "artifact_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Artifacts"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
         "/pulp/api/v3/content/python/packages/": {
             "get": {
                 "operationId": "content_python_packages_list",
@@ -138,17 +426,7 @@
                         "in": "query",
                         "description": "packagetype",
                         "schema": {
-                            "type": "string",
-                            "enum": [
-                                "bdist_dmg",
-                                "bdist_dumb",
-                                "bdist_egg",
-                                "bdist_msi",
-                                "bdist_rpm",
-                                "bdist_wheel",
-                                "bdist_wininst",
-                                "sdist"
-                            ]
+                            "type": "string"
                         }
                     },
                     {
@@ -921,6 +1199,1572 @@
                 ],
                 "tags": [
                     "Distributions: Pypi"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AsyncOperationResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/pulp/api/v3/docs/api.json": {
+            "get": {
+                "operationId": "pulp_api_v3_docs_api.json_read",
+                "description": "OpenApi3 schema for this API. Format can be selected via content negotiation.\n\n- YAML: application/vnd.oai.openapi\n- JSON: application/vnd.oai.openapi+json",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "lang",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "af",
+                                "ar",
+                                "ast",
+                                "az",
+                                "be",
+                                "bg",
+                                "bn",
+                                "br",
+                                "bs",
+                                "ca",
+                                "cs",
+                                "cy",
+                                "da",
+                                "de",
+                                "dsb",
+                                "el",
+                                "en",
+                                "en-au",
+                                "en-gb",
+                                "eo",
+                                "es",
+                                "es-ar",
+                                "es-co",
+                                "es-mx",
+                                "es-ni",
+                                "es-ve",
+                                "et",
+                                "eu",
+                                "fa",
+                                "fi",
+                                "fr",
+                                "fy",
+                                "ga",
+                                "gd",
+                                "gl",
+                                "he",
+                                "hi",
+                                "hr",
+                                "hsb",
+                                "hu",
+                                "hy",
+                                "ia",
+                                "id",
+                                "io",
+                                "is",
+                                "it",
+                                "ja",
+                                "ka",
+                                "kab",
+                                "kk",
+                                "km",
+                                "kn",
+                                "ko",
+                                "lb",
+                                "lt",
+                                "lv",
+                                "mk",
+                                "ml",
+                                "mn",
+                                "mr",
+                                "my",
+                                "nb",
+                                "ne",
+                                "nl",
+                                "nn",
+                                "os",
+                                "pa",
+                                "pl",
+                                "pt",
+                                "pt-br",
+                                "ro",
+                                "ru",
+                                "sk",
+                                "sl",
+                                "sq",
+                                "sr",
+                                "sr-latn",
+                                "sv",
+                                "sw",
+                                "ta",
+                                "te",
+                                "th",
+                                "tr",
+                                "tt",
+                                "udm",
+                                "uk",
+                                "ur",
+                                "vi",
+                                "zh-hans",
+                                "zh-hant"
+                            ]
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Docs: Api.Json"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    },
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/vnd.oai.openapi+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/pulp/api/v3/docs/api.yaml": {
+            "get": {
+                "operationId": "pulp_api_v3_docs_api.yaml_read",
+                "description": "OpenApi3 schema for this API. Format can be selected via content negotiation.\n\n- YAML: application/vnd.oai.openapi\n- JSON: application/vnd.oai.openapi+json",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "lang",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "af",
+                                "ar",
+                                "ast",
+                                "az",
+                                "be",
+                                "bg",
+                                "bn",
+                                "br",
+                                "bs",
+                                "ca",
+                                "cs",
+                                "cy",
+                                "da",
+                                "de",
+                                "dsb",
+                                "el",
+                                "en",
+                                "en-au",
+                                "en-gb",
+                                "eo",
+                                "es",
+                                "es-ar",
+                                "es-co",
+                                "es-mx",
+                                "es-ni",
+                                "es-ve",
+                                "et",
+                                "eu",
+                                "fa",
+                                "fi",
+                                "fr",
+                                "fy",
+                                "ga",
+                                "gd",
+                                "gl",
+                                "he",
+                                "hi",
+                                "hr",
+                                "hsb",
+                                "hu",
+                                "hy",
+                                "ia",
+                                "id",
+                                "io",
+                                "is",
+                                "it",
+                                "ja",
+                                "ka",
+                                "kab",
+                                "kk",
+                                "km",
+                                "kn",
+                                "ko",
+                                "lb",
+                                "lt",
+                                "lv",
+                                "mk",
+                                "ml",
+                                "mn",
+                                "mr",
+                                "my",
+                                "nb",
+                                "ne",
+                                "nl",
+                                "nn",
+                                "os",
+                                "pa",
+                                "pl",
+                                "pt",
+                                "pt-br",
+                                "ro",
+                                "ru",
+                                "sk",
+                                "sl",
+                                "sq",
+                                "sr",
+                                "sr-latn",
+                                "sv",
+                                "sw",
+                                "ta",
+                                "te",
+                                "th",
+                                "tr",
+                                "tt",
+                                "udm",
+                                "uk",
+                                "ur",
+                                "vi",
+                                "zh-hans",
+                                "zh-hant"
+                            ]
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Docs: Api.Yaml"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    },
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/vnd.oai.openapi": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                }
+                            },
+                            "application/yaml": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/pulp/api/v3/exporters/core/pulp/": {
+            "get": {
+                "operationId": "exporters_core_pulp_list",
+                "description": "ViewSet for viewing PulpExporters.",
+                "summary": "List pulp exporters",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "required": false,
+                        "in": "query",
+                        "description": "name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name__in",
+                        "required": false,
+                        "in": "query",
+                        "description": "name__in",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Exporters: Pulp"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PulpExporterResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "operationId": "exporters_core_pulp_create",
+                "description": "ViewSet for viewing PulpExporters.",
+                "summary": "Create a pulp exporter",
+                "tags": [
+                    "Exporters: Pulp"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpExporter"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpExporter"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpExporter"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PulpExporterResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{pulp_exporter_href}exports/": {
+            "get": {
+                "operationId": "exporters_core_pulp_exports_list",
+                "description": "ViewSet for viewing exports from a PulpExporter.",
+                "summary": "List pulp exports",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "pulp_exporter_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Exporters: Core Exports"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PulpExportResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{core_pulp_pulp_export_href}exports/": {
+            "post": {
+                "operationId": "exporters_core_pulp_exports_create",
+                "description": "Trigger an asynchronous task to export a set of repositories",
+                "summary": "Create a pulp export",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "core_pulp_pulp_export_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Exporters: Core Exports"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpExport"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpExport"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpExport"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AsyncOperationResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{core_pulp_pulp_export_href}": {
+            "get": {
+                "operationId": "exporters_core_pulp_exports_read",
+                "description": "ViewSet for viewing exports from a PulpExporter.",
+                "summary": "Inspect a pulp export",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "core_pulp_pulp_export_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Exporters: Core Exports"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PulpExportResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "exporters_core_pulp_exports_delete",
+                "description": "ViewSet for viewing exports from a PulpExporter.",
+                "summary": "Delete a pulp export",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "core_pulp_pulp_export_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Exporters: Core Exports"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "{pulp_exporter_href}": {
+            "get": {
+                "operationId": "exporters_core_pulp_read",
+                "description": "ViewSet for viewing PulpExporters.",
+                "summary": "Inspect a pulp exporter",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pulp_exporter_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Exporters: Pulp"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PulpExporterResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "operationId": "exporters_core_pulp_update",
+                "description": "ViewSet for viewing PulpExporters.",
+                "summary": "Update a pulp exporter",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pulp_exporter_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Exporters: Pulp"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpExporter"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpExporter"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpExporter"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PulpExporterResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "exporters_core_pulp_partial_update",
+                "description": "ViewSet for viewing PulpExporters.",
+                "summary": "Update a pulp exporter",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pulp_exporter_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Exporters: Pulp"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedPulpExporter"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedPulpExporter"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedPulpExporter"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PulpExporterResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "exporters_core_pulp_delete",
+                "description": "ViewSet for viewing PulpExporters.",
+                "summary": "Delete a pulp exporter",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pulp_exporter_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Exporters: Pulp"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "/pulp/api/v3/importers/core/pulp/": {
+            "get": {
+                "operationId": "importers_core_pulp_list",
+                "description": "ViewSet for PulpImporters.",
+                "summary": "List pulp importers",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "required": false,
+                        "in": "query",
+                        "description": "name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name__in",
+                        "required": false,
+                        "in": "query",
+                        "description": "name__in",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Importers: Pulp"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PulpImporterResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "operationId": "importers_core_pulp_create",
+                "description": "ViewSet for PulpImporters.",
+                "summary": "Create a pulp importer",
+                "tags": [
+                    "Importers: Pulp"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpImporter"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpImporter"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpImporter"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PulpImporterResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{pulp_importer_href}imports/": {
+            "get": {
+                "operationId": "importers_core_pulp_imports_list",
+                "description": "ViewSet for PulpImports.",
+                "summary": "List pulp imports",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "pulp_importer_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Importers: Core Imports"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ImportResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{core_pulp_pulp_import_href}imports/": {
+            "post": {
+                "operationId": "importers_core_pulp_imports_create",
+                "description": "Trigger an asynchronous task to import a Pulp export.",
+                "summary": "Create a pulp import",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "core_pulp_pulp_import_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Importers: Core Imports"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpImport"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpImport"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpImport"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AsyncOperationResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{core_pulp_pulp_import_href}": {
+            "get": {
+                "operationId": "importers_core_pulp_imports_read",
+                "description": "ViewSet for PulpImports.",
+                "summary": "Inspect a pulp import",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "core_pulp_pulp_import_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Importers: Core Imports"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ImportResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "importers_core_pulp_imports_delete",
+                "description": "ViewSet for PulpImports.",
+                "summary": "Delete a pulp import",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "core_pulp_pulp_import_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Importers: Core Imports"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "{pulp_importer_href}": {
+            "get": {
+                "operationId": "importers_core_pulp_read",
+                "description": "ViewSet for PulpImporters.",
+                "summary": "Inspect a pulp importer",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pulp_importer_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Importers: Pulp"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PulpImporterResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "operationId": "importers_core_pulp_update",
+                "description": "ViewSet for PulpImporters.",
+                "summary": "Update a pulp importer",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pulp_importer_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Importers: Pulp"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpImporter"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpImporter"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PulpImporter"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PulpImporterResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "importers_core_pulp_partial_update",
+                "description": "ViewSet for PulpImporters.",
+                "summary": "Update a pulp importer",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pulp_importer_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Importers: Pulp"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedPulpImporter"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedPulpImporter"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedPulpImporter"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PulpImporterResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "importers_core_pulp_delete",
+                "description": "ViewSet for PulpImporters.",
+                "summary": "Delete a pulp importer",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pulp_importer_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Importers: Pulp"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "/pulp/api/v3/orphans/": {
+            "delete": {
+                "operationId": "pulp_api_v3_orphans_delete",
+                "description": "Trigger an asynchronous task that deletes allorphaned content and artifacts.",
+                "summary": "Delete orphans",
+                "tags": [
+                    "Orphans"
                 ],
                 "security": [
                     {
@@ -3038,10 +4882,1724 @@
                     }
                 }
             }
+        },
+        "/pulp/api/v3/signing-services/": {
+            "get": {
+                "operationId": "signing_services_list",
+                "description": "A ViewSet that supports browsing of existing signing services.",
+                "summary": "List signing services",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "required": false,
+                        "in": "query",
+                        "description": "name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Signing-Services"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/SigningServiceResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{signing_service_href}": {
+            "get": {
+                "operationId": "signing_services_read",
+                "description": "A ViewSet that supports browsing of existing signing services.",
+                "summary": "Inspect a signing service",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "signing_service_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Signing-Services"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SigningServiceResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/pulp/api/v3/status/": {
+            "get": {
+                "operationId": "status_read",
+                "description": "Returns app information including the version of pulpcore and loaded pulp plugins,\nknown workers, database connection status, and messaging connection status",
+                "summary": "Inspect status of Pulp",
+                "tags": [
+                    "Status"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StatusResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/pulp/api/v3/task-groups/": {
+            "get": {
+                "operationId": "task_groups_list",
+                "description": "A customized named ModelViewSet that knows how to register itself with the Pulp API router.\n\nThis viewset is discoverable by its name.\n\"Normal\" Django Models and Master/Detail models are supported by the ``register_with`` method.\n\nAttributes:\n    lookup_field (str): The name of the field by which an object should be looked up, in\n        addition to any parent lookups if this ViewSet is nested. Defaults to 'pk'\n    endpoint_name (str): The name of the final path segment that should identify the ViewSet's\n        collection endpoint.\n    nest_prefix (str): Optional prefix under which this ViewSet should be nested. This must\n        correspond to the \"parent_prefix\" of a router with rest_framework_nested.NestedMixin.\n        None indicates this ViewSet should not be nested.\n    parent_lookup_kwargs (dict): Optional mapping of key names that would appear in self.kwargs\n        to django model filter expressions that can be used with the corresponding value from\n        self.kwargs, used only by a nested ViewSet to filter based on the parent object's\n        identity.\n    schema (DefaultSchema): The schema class to use by default in a viewset.",
+                "summary": "List task groups",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Task-Groups"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TaskGroupResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{task_group_href}": {
+            "get": {
+                "operationId": "task_groups_read",
+                "description": "A customized named ModelViewSet that knows how to register itself with the Pulp API router.\n\nThis viewset is discoverable by its name.\n\"Normal\" Django Models and Master/Detail models are supported by the ``register_with`` method.\n\nAttributes:\n    lookup_field (str): The name of the field by which an object should be looked up, in\n        addition to any parent lookups if this ViewSet is nested. Defaults to 'pk'\n    endpoint_name (str): The name of the final path segment that should identify the ViewSet's\n        collection endpoint.\n    nest_prefix (str): Optional prefix under which this ViewSet should be nested. This must\n        correspond to the \"parent_prefix\" of a router with rest_framework_nested.NestedMixin.\n        None indicates this ViewSet should not be nested.\n    parent_lookup_kwargs (dict): Optional mapping of key names that would appear in self.kwargs\n        to django model filter expressions that can be used with the corresponding value from\n        self.kwargs, used only by a nested ViewSet to filter based on the parent object's\n        identity.\n    schema (DefaultSchema): The schema class to use by default in a viewset.",
+                "summary": "Inspect a task group",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "task_group_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Task-Groups"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskGroupResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/pulp/api/v3/tasks/": {
+            "get": {
+                "operationId": "tasks_list",
+                "description": "A customized named ModelViewSet that knows how to register itself with the Pulp API router.\n\nThis viewset is discoverable by its name.\n\"Normal\" Django Models and Master/Detail models are supported by the ``register_with`` method.\n\nAttributes:\n    lookup_field (str): The name of the field by which an object should be looked up, in\n        addition to any parent lookups if this ViewSet is nested. Defaults to 'pk'\n    endpoint_name (str): The name of the final path segment that should identify the ViewSet's\n        collection endpoint.\n    nest_prefix (str): Optional prefix under which this ViewSet should be nested. This must\n        correspond to the \"parent_prefix\" of a router with rest_framework_nested.NestedMixin.\n        None indicates this ViewSet should not be nested.\n    parent_lookup_kwargs (dict): Optional mapping of key names that would appear in self.kwargs\n        to django model filter expressions that can be used with the corresponding value from\n        self.kwargs, used only by a nested ViewSet to filter based on the parent object's\n        identity.\n    schema (DefaultSchema): The schema class to use by default in a viewset.",
+                "summary": "List tasks",
+                "parameters": [
+                    {
+                        "name": "child_tasks",
+                        "required": false,
+                        "in": "query",
+                        "description": "child_tasks",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "created_resources",
+                        "required": false,
+                        "in": "query",
+                        "description": "created_resources",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at__gt",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at__gt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at__gte",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at__gte",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at__lt",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at__lt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at__lte",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at__lte",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at__range",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at__range",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "required": false,
+                        "in": "query",
+                        "description": "name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name__contains",
+                        "required": false,
+                        "in": "query",
+                        "description": "name__contains",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "parent_task",
+                        "required": false,
+                        "in": "query",
+                        "description": "parent_task",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reserved_resources_record",
+                        "required": false,
+                        "in": "query",
+                        "description": "reserved_resources_record",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at__gt",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at__gt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at__gte",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at__gte",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at__lt",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at__lt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at__lte",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at__lte",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at__range",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at__range",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "required": false,
+                        "in": "query",
+                        "description": "state",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state__in",
+                        "required": false,
+                        "in": "query",
+                        "description": "state__in",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "task_group",
+                        "required": false,
+                        "in": "query",
+                        "description": "task_group",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "worker",
+                        "required": false,
+                        "in": "query",
+                        "description": "worker",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "worker__in",
+                        "required": false,
+                        "in": "query",
+                        "description": "worker__in",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Tasks"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TaskResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{task_href}": {
+            "get": {
+                "operationId": "tasks_read",
+                "description": "A customized named ModelViewSet that knows how to register itself with the Pulp API router.\n\nThis viewset is discoverable by its name.\n\"Normal\" Django Models and Master/Detail models are supported by the ``register_with`` method.\n\nAttributes:\n    lookup_field (str): The name of the field by which an object should be looked up, in\n        addition to any parent lookups if this ViewSet is nested. Defaults to 'pk'\n    endpoint_name (str): The name of the final path segment that should identify the ViewSet's\n        collection endpoint.\n    nest_prefix (str): Optional prefix under which this ViewSet should be nested. This must\n        correspond to the \"parent_prefix\" of a router with rest_framework_nested.NestedMixin.\n        None indicates this ViewSet should not be nested.\n    parent_lookup_kwargs (dict): Optional mapping of key names that would appear in self.kwargs\n        to django model filter expressions that can be used with the corresponding value from\n        self.kwargs, used only by a nested ViewSet to filter based on the parent object's\n        identity.\n    schema (DefaultSchema): The schema class to use by default in a viewset.",
+                "summary": "Inspect a task",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "task_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Tasks"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "tasks_cancel",
+                "description": "This operation cancels a task.",
+                "summary": "Cancel a task",
+                "parameters": [
+                    {
+                        "name": "child_tasks",
+                        "required": false,
+                        "in": "query",
+                        "description": "child_tasks",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "created_resources",
+                        "required": false,
+                        "in": "query",
+                        "description": "created_resources",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at__gt",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at__gt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at__gte",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at__gte",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at__lt",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at__lt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at__lte",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at__lte",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "finished_at__range",
+                        "required": false,
+                        "in": "query",
+                        "description": "finished_at__range",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "required": false,
+                        "in": "query",
+                        "description": "name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name__contains",
+                        "required": false,
+                        "in": "query",
+                        "description": "name__contains",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "parent_task",
+                        "required": false,
+                        "in": "query",
+                        "description": "parent_task",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reserved_resources_record",
+                        "required": false,
+                        "in": "query",
+                        "description": "reserved_resources_record",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at__gt",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at__gt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at__gte",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at__gte",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at__lt",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at__lt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at__lte",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at__lte",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "started_at__range",
+                        "required": false,
+                        "in": "query",
+                        "description": "started_at__range",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "required": false,
+                        "in": "query",
+                        "description": "state",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state__in",
+                        "required": false,
+                        "in": "query",
+                        "description": "state__in",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "task_group",
+                        "required": false,
+                        "in": "query",
+                        "description": "task_group",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "task_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "worker",
+                        "required": false,
+                        "in": "query",
+                        "description": "worker",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "worker__in",
+                        "required": false,
+                        "in": "query",
+                        "description": "worker__in",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Tasks"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedTaskCancel"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedTaskCancel"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedTaskCancel"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    },
+                    "409": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "tasks_delete",
+                "description": "A customized named ModelViewSet that knows how to register itself with the Pulp API router.\n\nThis viewset is discoverable by its name.\n\"Normal\" Django Models and Master/Detail models are supported by the ``register_with`` method.\n\nAttributes:\n    lookup_field (str): The name of the field by which an object should be looked up, in\n        addition to any parent lookups if this ViewSet is nested. Defaults to 'pk'\n    endpoint_name (str): The name of the final path segment that should identify the ViewSet's\n        collection endpoint.\n    nest_prefix (str): Optional prefix under which this ViewSet should be nested. This must\n        correspond to the \"parent_prefix\" of a router with rest_framework_nested.NestedMixin.\n        None indicates this ViewSet should not be nested.\n    parent_lookup_kwargs (dict): Optional mapping of key names that would appear in self.kwargs\n        to django model filter expressions that can be used with the corresponding value from\n        self.kwargs, used only by a nested ViewSet to filter based on the parent object's\n        identity.\n    schema (DefaultSchema): The schema class to use by default in a viewset.",
+                "summary": "Delete a task",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "task_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Tasks"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "/pulp/api/v3/uploads/": {
+            "get": {
+                "operationId": "uploads_list",
+                "description": "View for chunked uploads.",
+                "summary": "List uploads",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Uploads"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/UploadResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "operationId": "uploads_create",
+                "description": "View for chunked uploads.",
+                "summary": "Create an upload",
+                "tags": [
+                    "Uploads"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Upload"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Upload"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Upload"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UploadResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{upload_href}": {
+            "get": {
+                "operationId": "uploads_read",
+                "description": "View for chunked uploads.",
+                "summary": "Inspect an upload",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "upload_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Uploads"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UploadDetailResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "operationId": "uploads_update",
+                "description": "Upload a chunk for an upload.",
+                "summary": "Upload a file chunk",
+                "parameters": [
+                    {
+                        "in": "header",
+                        "name": "Content-Range",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The Content-Range header specifies the location of the file chunk within the file.",
+                        "required": true
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "upload_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Uploads"
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UploadChunk"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UploadChunk"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UploadResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "uploads_delete",
+                "description": "View for chunked uploads.",
+                "summary": "Delete an upload",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "upload_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Uploads"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "{upload_href}commit/": {
+            "post": {
+                "operationId": "uploads_commit",
+                "description": "Queues a Task that creates an Artifact, and the Upload gets deleted and cannot be re-used.",
+                "summary": "Finish an Upload",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "upload_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Uploads"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UploadCommit"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UploadCommit"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UploadCommit"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AsyncOperationResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/pulp/api/v3/workers/": {
+            "get": {
+                "operationId": "workers_list",
+                "description": "A customized named ModelViewSet that knows how to register itself with the Pulp API router.\n\nThis viewset is discoverable by its name.\n\"Normal\" Django Models and Master/Detail models are supported by the ``register_with`` method.\n\nAttributes:\n    lookup_field (str): The name of the field by which an object should be looked up, in\n        addition to any parent lookups if this ViewSet is nested. Defaults to 'pk'\n    endpoint_name (str): The name of the final path segment that should identify the ViewSet's\n        collection endpoint.\n    nest_prefix (str): Optional prefix under which this ViewSet should be nested. This must\n        correspond to the \"parent_prefix\" of a router with rest_framework_nested.NestedMixin.\n        None indicates this ViewSet should not be nested.\n    parent_lookup_kwargs (dict): Optional mapping of key names that would appear in self.kwargs\n        to django model filter expressions that can be used with the corresponding value from\n        self.kwargs, used only by a nested ViewSet to filter based on the parent object's\n        identity.\n    schema (DefaultSchema): The schema class to use by default in a viewset.",
+                "summary": "List workers",
+                "parameters": [
+                    {
+                        "name": "last_heartbeat",
+                        "required": false,
+                        "in": "query",
+                        "description": "last_heartbeat",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_heartbeat__gt",
+                        "required": false,
+                        "in": "query",
+                        "description": "last_heartbeat__gt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_heartbeat__gte",
+                        "required": false,
+                        "in": "query",
+                        "description": "last_heartbeat__gte",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_heartbeat__lt",
+                        "required": false,
+                        "in": "query",
+                        "description": "last_heartbeat__lt",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_heartbeat__lte",
+                        "required": false,
+                        "in": "query",
+                        "description": "last_heartbeat__lte",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_heartbeat__range",
+                        "required": false,
+                        "in": "query",
+                        "description": "last_heartbeat__range",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "required": false,
+                        "in": "query",
+                        "description": "Number of results to return per page.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "missing",
+                        "required": false,
+                        "in": "query",
+                        "description": "missing",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "required": false,
+                        "in": "query",
+                        "description": "name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name__in",
+                        "required": false,
+                        "in": "query",
+                        "description": "name__in",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "required": false,
+                        "in": "query",
+                        "description": "The initial index from which to return the results.",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "online",
+                        "required": false,
+                        "in": "query",
+                        "description": "online",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Workers"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "count": {
+                                            "type": "integer",
+                                            "example": 123
+                                        },
+                                        "next": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "previous": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "results": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/WorkerResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "{worker_href}": {
+            "get": {
+                "operationId": "workers_read",
+                "description": "A customized named ModelViewSet that knows how to register itself with the Pulp API router.\n\nThis viewset is discoverable by its name.\n\"Normal\" Django Models and Master/Detail models are supported by the ``register_with`` method.\n\nAttributes:\n    lookup_field (str): The name of the field by which an object should be looked up, in\n        addition to any parent lookups if this ViewSet is nested. Defaults to 'pk'\n    endpoint_name (str): The name of the final path segment that should identify the ViewSet's\n        collection endpoint.\n    nest_prefix (str): Optional prefix under which this ViewSet should be nested. This must\n        correspond to the \"parent_prefix\" of a router with rest_framework_nested.NestedMixin.\n        None indicates this ViewSet should not be nested.\n    parent_lookup_kwargs (dict): Optional mapping of key names that would appear in self.kwargs\n        to django model filter expressions that can be used with the corresponding value from\n        self.kwargs, used only by a nested ViewSet to filter based on the parent object's\n        identity.\n    schema (DefaultSchema): The schema class to use by default in a viewset.",
+                "summary": "Inspect a worker",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "worker_href",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to include in the response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "exclude_fields",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "A list of fields to exclude from the response."
+                    }
+                ],
+                "tags": [
+                    "Workers"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    },
+                    {
+                        "basicAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WorkerResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
+            "Artifact": {
+                "type": "object",
+                "description": "Base serializer for use with :class:`pulpcore.app.models.Model`\n\nThis ensures that all Serializers provide values for the 'pulp_href` field.\n\nThe class provides a default for the ``ref_name`` attribute in the\nModelSerializers's ``Meta`` class. This ensures that the OpenAPI definitions\nof plugins are namespaced properly.",
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "The stored file."
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "The size of the file in bytes."
+                    },
+                    "md5": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The MD5 checksum of the file if available."
+                    },
+                    "sha1": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The SHA-1 checksum of the file if available."
+                    },
+                    "sha224": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The SHA-224 checksum of the file if available."
+                    },
+                    "sha256": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The SHA-256 checksum of the file if available."
+                    },
+                    "sha384": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The SHA-384 checksum of the file if available."
+                    },
+                    "sha512": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The SHA-512 checksum of the file if available."
+                    }
+                },
+                "required": [
+                    "file"
+                ]
+            },
+            "ArtifactResponse": {
+                "type": "object",
+                "description": "Base serializer for use with :class:`pulpcore.app.models.Model`\n\nThis ensures that all Serializers provide values for the 'pulp_href` field.\n\nThe class provides a default for the ``ref_name`` attribute in the\nModelSerializers's ``Meta`` class. This ensures that the OpenAPI definitions\nof plugins are namespaced properly.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "pulp_created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of creation."
+                    },
+                    "file": {
+                        "type": "string",
+                        "description": "The stored file."
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "The size of the file in bytes."
+                    },
+                    "md5": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The MD5 checksum of the file if available."
+                    },
+                    "sha1": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The SHA-1 checksum of the file if available."
+                    },
+                    "sha224": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The SHA-224 checksum of the file if available."
+                    },
+                    "sha256": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The SHA-256 checksum of the file if available."
+                    },
+                    "sha384": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The SHA-384 checksum of the file if available."
+                    },
+                    "sha512": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The SHA-512 checksum of the file if available."
+                    }
+                },
+                "required": [
+                    "file"
+                ]
+            },
             "AsyncOperationResponse": {
                 "type": "object",
                 "description": "Serializer for asynchronous operations.",
@@ -3055,6 +6613,23 @@
                 "required": [
                     "task"
                 ]
+            },
+            "ContentAppStatusResponse": {
+                "type": "object",
+                "description": "Base serializer for use with :class:`pulpcore.app.models.Model`\n\nThis ensures that all Serializers provide values for the 'pulp_href` field.\n\nThe class provides a default for the ``ref_name`` attribute in the\nModelSerializers's ``Meta`` class. This ensures that the OpenAPI definitions\nof plugins are namespaced properly.",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "readOnly": true,
+                        "description": "The name of the worker."
+                    },
+                    "last_heartbeat": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of the last time the worker talked to the service."
+                    }
+                }
             },
             "ContentSummary": {
                 "type": "object",
@@ -3095,6 +6670,132 @@
                     "present",
                     "removed"
                 ]
+            },
+            "DatabaseConnectionResponse": {
+                "type": "object",
+                "description": "Serializer for the database connection information",
+                "properties": {
+                    "connected": {
+                        "type": "boolean",
+                        "description": "Info about whether the app can connect to the database"
+                    }
+                },
+                "required": [
+                    "connected"
+                ]
+            },
+            "GroupProgressReportResponse": {
+                "type": "object",
+                "description": "Base serializer for use with :class:`pulpcore.app.models.Model`\n\nThis ensures that all Serializers provide values for the 'pulp_href` field.\n\nThe class provides a default for the ``ref_name`` attribute in the\nModelSerializers's ``Meta`` class. This ensures that the OpenAPI definitions\nof plugins are namespaced properly.",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "readOnly": true,
+                        "description": "The message shown to the user for the group progress report."
+                    },
+                    "code": {
+                        "type": "string",
+                        "readOnly": true,
+                        "description": "Identifies the type of group progress report'."
+                    },
+                    "total": {
+                        "type": "integer",
+                        "readOnly": true,
+                        "description": "The total count of items."
+                    },
+                    "done": {
+                        "type": "integer",
+                        "readOnly": true,
+                        "description": "The count of items already processed. Defaults to 0."
+                    },
+                    "suffix": {
+                        "type": "string",
+                        "readOnly": true,
+                        "nullable": true,
+                        "description": "The suffix to be shown with the group progress report."
+                    }
+                }
+            },
+            "ImportResponse": {
+                "type": "object",
+                "description": "Serializer for Imports.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "pulp_created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of creation."
+                    },
+                    "task": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "A URI of the Task that ran the Import."
+                    },
+                    "params": {
+                        "type": "object",
+                        "description": "Any parameters that were used to create the import."
+                    }
+                },
+                "required": [
+                    "params",
+                    "task"
+                ]
+            },
+            "PatchedPulpExporter": {
+                "type": "object",
+                "description": "Serializer for pulp exporters.",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Unique name of the file system exporter."
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "File system directory to store exported tar.gzs."
+                    },
+                    "repositories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    },
+                    "last_export": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true,
+                        "description": "Last attempted export for this PulpExporter"
+                    }
+                }
+            },
+            "PatchedPulpImporter": {
+                "type": "object",
+                "description": "Serializer for PulpImporters.",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Unique name of the Importer."
+                    },
+                    "repo_mapping": {
+                        "type": "object",
+                        "description": "Mapping of repo names in an export file to the repo names in Pulp. For example, if the export has a repo named 'foo' and the repo to import content into was 'bar', the mapping would be \"{'foo': 'bar'}\"."
+                    }
+                }
+            },
+            "PatchedTaskCancel": {
+                "type": "object",
+                "description": "Base serializer for use with :class:`pulpcore.app.models.Model`\n\nThis ensures that all Serializers provide values for the 'pulp_href` field.\n\nThe class provides a default for the ``ref_name`` attribute in the\nModelSerializers's ``Meta`` class. This ensures that the OpenAPI definitions\nof plugins are namespaced properly.",
+                "properties": {
+                    "state": {
+                        "type": "string",
+                        "description": "The desired state of the task. Only 'canceled' is accepted."
+                    }
+                }
             },
             "Patchedpython.PythonDistribution": {
                 "type": "object",
@@ -3224,6 +6925,265 @@
                 ],
                 "type": "string"
             },
+            "ProgressReportResponse": {
+                "type": "object",
+                "description": "Base serializer for use with :class:`pulpcore.app.models.Model`\n\nThis ensures that all Serializers provide values for the 'pulp_href` field.\n\nThe class provides a default for the ``ref_name`` attribute in the\nModelSerializers's ``Meta`` class. This ensures that the OpenAPI definitions\nof plugins are namespaced properly.",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "readOnly": true,
+                        "description": "The message shown to the user for the progress report."
+                    },
+                    "code": {
+                        "type": "string",
+                        "readOnly": true,
+                        "description": "Identifies the type of progress report'."
+                    },
+                    "state": {
+                        "type": "string",
+                        "readOnly": true,
+                        "description": "The current state of the progress report. The possible values are: 'waiting', 'skipped', 'running', 'completed', 'failed' and 'canceled'. The default is 'waiting'."
+                    },
+                    "total": {
+                        "type": "integer",
+                        "readOnly": true,
+                        "description": "The total count of items."
+                    },
+                    "done": {
+                        "type": "integer",
+                        "readOnly": true,
+                        "description": "The count of items already processed. Defaults to 0."
+                    },
+                    "suffix": {
+                        "type": "string",
+                        "readOnly": true,
+                        "nullable": true,
+                        "description": "The suffix to be shown with the progress report."
+                    }
+                }
+            },
+            "PulpExport": {
+                "type": "object",
+                "description": "Serializer for PulpExports.",
+                "properties": {
+                    "task": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true,
+                        "description": "A URI of the task that ran the Export."
+                    },
+                    "full": {
+                        "type": "boolean",
+                        "writeOnly": true,
+                        "default": true,
+                        "description": "Do a Full (true) or Incremental (false) export."
+                    },
+                    "dry_run": {
+                        "type": "boolean",
+                        "writeOnly": true,
+                        "default": false,
+                        "description": "Generate report on what would be exported and disk-space required."
+                    },
+                    "versions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri",
+                            "writeOnly": true
+                        },
+                        "writeOnly": true,
+                        "description": "List of explicit repo-version hrefs to export (replaces current_version)."
+                    },
+                    "chunk_size": {
+                        "type": "string",
+                        "writeOnly": true,
+                        "description": "Chunk export-tarfile into pieces of chunk_size bytes.Recognizes units of B/KB/MB/GB/TB."
+                    },
+                    "start_versions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri",
+                            "writeOnly": true
+                        },
+                        "writeOnly": true,
+                        "description": "List of explicit last-exported-repo-version hrefs (replaces last_export)."
+                    }
+                }
+            },
+            "PulpExportResponse": {
+                "type": "object",
+                "description": "Serializer for PulpExports.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "pulp_created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of creation."
+                    },
+                    "task": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true,
+                        "description": "A URI of the task that ran the Export."
+                    },
+                    "exported_resources": {
+                        "type": "array",
+                        "items": {},
+                        "readOnly": true,
+                        "description": "Resources that were exported."
+                    },
+                    "params": {
+                        "type": "object",
+                        "readOnly": true,
+                        "description": "Any additional parameters that were used to create the export."
+                    },
+                    "output_file_info": {
+                        "type": "object",
+                        "readOnly": true,
+                        "description": "Dictionary of filename: sha256hash entries for export-output-file(s)"
+                    }
+                }
+            },
+            "PulpExporter": {
+                "type": "object",
+                "description": "Serializer for pulp exporters.",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Unique name of the file system exporter."
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "File system directory to store exported tar.gzs."
+                    },
+                    "repositories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    },
+                    "last_export": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true,
+                        "description": "Last attempted export for this PulpExporter"
+                    }
+                },
+                "required": [
+                    "name",
+                    "path",
+                    "repositories"
+                ]
+            },
+            "PulpExporterResponse": {
+                "type": "object",
+                "description": "Serializer for pulp exporters.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "pulp_created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of creation."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Unique name of the file system exporter."
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "File system directory to store exported tar.gzs."
+                    },
+                    "repositories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        }
+                    },
+                    "last_export": {
+                        "type": "string",
+                        "format": "uri",
+                        "nullable": true,
+                        "description": "Last attempted export for this PulpExporter"
+                    }
+                },
+                "required": [
+                    "name",
+                    "path",
+                    "repositories"
+                ]
+            },
+            "PulpImport": {
+                "type": "object",
+                "description": "Serializer for call to import into Pulp.",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to export that will be imported."
+                    },
+                    "toc": {
+                        "type": "string",
+                        "description": "Path to a table-of-contents file describing chunks to be validated, reassembled, and imported."
+                    }
+                }
+            },
+            "PulpImporter": {
+                "type": "object",
+                "description": "Serializer for PulpImporters.",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Unique name of the Importer."
+                    },
+                    "repo_mapping": {
+                        "type": "object",
+                        "description": "Mapping of repo names in an export file to the repo names in Pulp. For example, if the export has a repo named 'foo' and the repo to import content into was 'bar', the mapping would be \"{'foo': 'bar'}\"."
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "PulpImporterResponse": {
+                "type": "object",
+                "description": "Serializer for PulpImporters.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "pulp_created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of creation."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Unique name of the Importer."
+                    },
+                    "repo_mapping": {
+                        "type": "object",
+                        "description": "Mapping of repo names in an export file to the repo names in Pulp. For example, if the export has a repo named 'foo' and the repo to import content into was 'bar', the mapping would be \"{'foo': 'bar'}\"."
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
             "PythonBanderRemote": {
                 "type": "object",
                 "description": "A Serializer for the initial step of creating a Python Remote from a Bandersnatch config file",
@@ -3237,11 +7197,33 @@
                     "name": {
                         "type": "string",
                         "description": "A unique name for this remote"
+                    },
+                    "policy": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/PolicyEnum"
+                            }
+                        ],
+                        "default": "immediate",
+                        "description": "The policy to use when downloading content. The possible values include: 'immediate', 'on_demand', and 'cache_only'. 'immediate' is the default."
                     }
                 },
                 "required": [
                     "config",
                     "name"
+                ]
+            },
+            "RedisConnectionResponse": {
+                "type": "object",
+                "description": "Serializer for information about the Redis connection",
+                "properties": {
+                    "connected": {
+                        "type": "boolean",
+                        "description": "Info about whether the app can connect to Redis"
+                    }
+                },
+                "required": [
+                    "connected"
                 ]
             },
             "RepositoryAddRemoveContent": {
@@ -3323,6 +7305,439 @@
                         ],
                         "readOnly": true,
                         "description": "Various count summaries of the content in the version and the HREF to view them."
+                    }
+                }
+            },
+            "SigningServiceResponse": {
+                "type": "object",
+                "description": "A serializer for the model declaring a signing service.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "pulp_created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of creation."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "A unique name used to recognize a script."
+                    },
+                    "script": {
+                        "type": "string",
+                        "description": "An absolute path to a script which is going to be used for the signing."
+                    }
+                },
+                "required": [
+                    "name",
+                    "script"
+                ]
+            },
+            "StatusResponse": {
+                "type": "object",
+                "description": "Serializer for the status information of the app",
+                "properties": {
+                    "versions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VersionResponse"
+                        },
+                        "description": "Version information of Pulp components"
+                    },
+                    "online_workers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/WorkerResponse"
+                        },
+                        "description": "List of online workers known to the application. An online worker is actively heartbeating and can respond to new work"
+                    },
+                    "online_content_apps": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ContentAppStatusResponse"
+                        },
+                        "description": "List of online content apps known to the application. An online content app is actively heartbeating and can serve data to clients"
+                    },
+                    "database_connection": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DatabaseConnectionResponse"
+                            }
+                        ],
+                        "description": "Database connection information"
+                    },
+                    "redis_connection": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/RedisConnectionResponse"
+                            }
+                        ],
+                        "description": "Redis connection information"
+                    },
+                    "storage": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/StorageResponse"
+                            }
+                        ],
+                        "description": "Storage information"
+                    }
+                },
+                "required": [
+                    "database_connection",
+                    "online_content_apps",
+                    "online_workers",
+                    "redis_connection",
+                    "versions"
+                ]
+            },
+            "StorageResponse": {
+                "type": "object",
+                "description": "Serializer for information about the storage system",
+                "properties": {
+                    "total": {
+                        "type": "integer",
+                        "description": "Total number of bytes",
+                        "minimum": 0
+                    },
+                    "used": {
+                        "type": "integer",
+                        "description": "Number of bytes in use",
+                        "minimum": 0
+                    },
+                    "free": {
+                        "type": "integer",
+                        "description": "Number of free bytes",
+                        "minimum": 0
+                    }
+                },
+                "required": [
+                    "free",
+                    "total",
+                    "used"
+                ]
+            },
+            "TaskGroupResponse": {
+                "type": "object",
+                "description": "Base serializer for use with :class:`pulpcore.app.models.Model`\n\nThis ensures that all Serializers provide values for the 'pulp_href` field.\n\nThe class provides a default for the ``ref_name`` attribute in the\nModelSerializers's ``Meta`` class. This ensures that the OpenAPI definitions\nof plugins are namespaced properly.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "A description of the task group."
+                    },
+                    "all_tasks_dispatched": {
+                        "type": "boolean",
+                        "description": "Whether all tasks have been spawned for this task group."
+                    },
+                    "waiting": {
+                        "type": "integer",
+                        "readOnly": true,
+                        "description": "Number of tasks in the 'waiting' state"
+                    },
+                    "skipped": {
+                        "type": "integer",
+                        "readOnly": true,
+                        "description": "Number of tasks in the 'skipped' state"
+                    },
+                    "running": {
+                        "type": "integer",
+                        "readOnly": true,
+                        "description": "Number of tasks in the 'running' state"
+                    },
+                    "completed": {
+                        "type": "integer",
+                        "readOnly": true,
+                        "description": "Number of tasks in the 'completed' state"
+                    },
+                    "canceled": {
+                        "type": "integer",
+                        "readOnly": true,
+                        "description": "Number of tasks in the 'canceled' state"
+                    },
+                    "failed": {
+                        "type": "integer",
+                        "readOnly": true,
+                        "description": "Number of tasks in the 'failed' state"
+                    },
+                    "group_progress_reports": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GroupProgressReportResponse"
+                        },
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "all_tasks_dispatched",
+                    "description"
+                ]
+            },
+            "TaskResponse": {
+                "type": "object",
+                "description": "Base serializer for use with :class:`pulpcore.app.models.Model`\n\nThis ensures that all Serializers provide values for the 'pulp_href` field.\n\nThe class provides a default for the ``ref_name`` attribute in the\nModelSerializers's ``Meta`` class. This ensures that the OpenAPI definitions\nof plugins are namespaced properly.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "pulp_created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of creation."
+                    },
+                    "state": {
+                        "type": "string",
+                        "readOnly": true,
+                        "description": "The current state of the task. The possible values include: 'waiting', 'skipped', 'running', 'completed', 'failed' and 'canceled'."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The name of task."
+                    },
+                    "started_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of the when this task started execution."
+                    },
+                    "finished_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of the when this task stopped execution."
+                    },
+                    "error": {
+                        "type": "object",
+                        "readOnly": true,
+                        "description": "A JSON Object of a fatal error encountered during the execution of this task."
+                    },
+                    "worker": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true,
+                        "description": "The worker associated with this task. This field is empty if a worker is not yet assigned."
+                    },
+                    "parent_task": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true,
+                        "description": "The parent task that spawned this task."
+                    },
+                    "child_tasks": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "readOnly": true,
+                        "description": "Any tasks spawned by this task."
+                    },
+                    "task_group": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true,
+                        "description": "The task group that this task is a member of."
+                    },
+                    "progress_reports": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProgressReportResponse"
+                        },
+                        "readOnly": true
+                    },
+                    "created_resources": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "readOnly": true,
+                        "description": "Resources created by this task."
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "Upload": {
+                "type": "object",
+                "description": "Serializer for chunked uploads.",
+                "properties": {
+                    "size": {
+                        "type": "integer",
+                        "description": "The size of the upload in bytes."
+                    }
+                },
+                "required": [
+                    "size"
+                ]
+            },
+            "UploadChunk": {
+                "type": "object",
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "writeOnly": true,
+                        "description": "A chunk of the uploaded file."
+                    },
+                    "sha256": {
+                        "type": "string",
+                        "writeOnly": true,
+                        "nullable": true,
+                        "description": "The SHA-256 checksum of the chunk if available."
+                    }
+                },
+                "required": [
+                    "file"
+                ]
+            },
+            "UploadChunkResponse": {
+                "type": "object",
+                "properties": {
+                    "offset": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "size": {
+                        "type": "integer",
+                        "readOnly": true
+                    }
+                }
+            },
+            "UploadCommit": {
+                "type": "object",
+                "properties": {
+                    "sha256": {
+                        "type": "string",
+                        "description": "The expected sha256 checksum for the file."
+                    }
+                },
+                "required": [
+                    "sha256"
+                ]
+            },
+            "UploadDetailResponse": {
+                "type": "object",
+                "description": "Serializer for chunked uploads.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "pulp_created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of creation."
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "The size of the upload in bytes."
+                    },
+                    "completed": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp when upload is committed."
+                    },
+                    "chunks": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UploadChunkResponse"
+                        },
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "size"
+                ]
+            },
+            "UploadResponse": {
+                "type": "object",
+                "description": "Serializer for chunked uploads.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "pulp_created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of creation."
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "The size of the upload in bytes."
+                    },
+                    "completed": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp when upload is committed."
+                    }
+                },
+                "required": [
+                    "size"
+                ]
+            },
+            "VersionResponse": {
+                "type": "object",
+                "description": "Serializer for the version information of Pulp components",
+                "properties": {
+                    "component": {
+                        "type": "string",
+                        "description": "Name of a versioned component of Pulp"
+                    },
+                    "version": {
+                        "type": "string",
+                        "description": "Version of the component (e.g. 3.0.0)"
+                    }
+                },
+                "required": [
+                    "component",
+                    "version"
+                ]
+            },
+            "WorkerResponse": {
+                "type": "object",
+                "description": "Base serializer for use with :class:`pulpcore.app.models.Model`\n\nThis ensures that all Serializers provide values for the 'pulp_href` field.\n\nThe class provides a default for the ``ref_name`` attribute in the\nModelSerializers's ``Meta`` class. This ensures that the OpenAPI definitions\nof plugins are namespaced properly.",
+                "properties": {
+                    "pulp_href": {
+                        "type": "string",
+                        "format": "uri",
+                        "readOnly": true
+                    },
+                    "pulp_created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of creation."
+                    },
+                    "name": {
+                        "type": "string",
+                        "readOnly": true,
+                        "description": "The name of the worker."
+                    },
+                    "last_heartbeat": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "description": "Timestamp of the last time the worker talked to the service."
                     }
                 }
             },

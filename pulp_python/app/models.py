@@ -5,6 +5,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from pulpcore.plugin.models import (
+    BaseModel,
     Content,
     Publication,
     PublicationDistribution,
@@ -72,65 +73,62 @@ class PythonDistribution(PublicationDistribution):
         default_related_name = "%(app_label)s_%(model_name)s"
 
 
-class PythonPackageContent(Content):
+class PythonPackage(BaseModel):
     """
-    A Content Type representing Python's Distribution Package.
+    Holder for Python Package Metadata
 
     As defined in pep-0426 and pep-0345.
 
     https://www.python.org/dev/peps/pep-0491/
     https://www.python.org/dev/peps/pep-0345/
     """
-
-    TYPE = 'python'
-    # Required metadata
-    filename = models.TextField(unique=True, db_index=True)
-    packagetype = models.TextField(choices=PACKAGE_TYPES)
-    name = models.TextField()
-    version = models.TextField()
-    # Optional metadata
-    python_version = models.TextField()
-    metadata_version = models.TextField()
-    summary = models.TextField()
-    description = models.TextField()
-    keywords = models.TextField()
-    home_page = models.TextField()
-    download_url = models.TextField()
+    name = models.TextField(editable=False)
+    # Info Metadata
     author = models.TextField()
     author_email = models.TextField()
+    bugtrack_url = models.TextField()
+    classifiers = JSONField(default=list)
+    description = models.TextField()
+    description_content_type = models.TextField()
+    docs_url = models.TextField()
+    download_url = models.TextField()
+    # downloads - not used
+    home_page = models.TextField()
+    keywords = models.TextField()
+    license = models.TextField()
     maintainer = models.TextField()
     maintainer_email = models.TextField()
-    license = models.TextField()
-    requires_python = models.TextField()
-    project_url = models.TextField()
+    package_url = models.TextField()
     platform = models.TextField()
-    supported_platform = models.TextField()
+    project_url = models.TextField()
+    project_urls = JSONField(default=dict)
+    release_url = models.TextField()
     requires_dist = JSONField(default=list)
-    provides_dist = JSONField(default=list)
-    obsoletes_dist = JSONField(default=list)
-    requires_external = JSONField(default=list)
-    classifiers = JSONField(default=list)
+    requires_python = models.TextField()
+    summary = models.TextField()
+    version = models.TextField()  # This is current latest release
+    # yanked and yanked reason are no longer used
+    # Should I include last_serial here?
 
-    def __str__(self):
-        """
-        Provide more useful repr information.
+    class Meta:
+        unique_together = ("name",)
 
-        Overrides Content.str to provide the distribution version and type at
-        the end.
 
-        e.g. <PythonPackageContent: shelf-reader [version] (whl)>
+class PythonPackageContent(Content):
+    """
+    A Content Type representing Python's Distribution Package.
+    """
 
-        """
-        return '<{obj_name}: {name} [{version}] ({type})>'.format(
-            obj_name=self._meta.object_name,
-            name=self.name,
-            version=self.version,
-            type=self.packagetype
-        )
+    TYPE = 'python'
+    name = models.TextField() # I should lookup how long this can be
+    count = models.IntegerField()
+    combined_hash = models.CharField(max_length=64)
+    package = models.ForeignKey(PythonPackage, on_delete=models.CASCADE, editable=False)
+
 
     class Meta:
         default_related_name = "%(app_label)s_%(model_name)s"
-        unique_together = ('filename',)
+        unique_together = ('combined_hash', 'name')
 
 
 class PythonPublication(Publication):

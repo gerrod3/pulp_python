@@ -2,9 +2,11 @@ import logging
 
 from gettext import gettext as _
 from os import environ
+from operator import attrgetter
 
 from rest_framework import serializers
 
+from pulpcore.app import pulp_hashlib
 from pulpcore.plugin.models import Artifact, ProgressReport, Remote, Repository
 from pulpcore.plugin.stages import (
     DeclarativeArtifact,
@@ -14,10 +16,11 @@ from pulpcore.plugin.stages import (
 )
 
 from pulp_python.app.models import (
+    PythonPackage,
     PythonPackageContent,
     PythonRemote,
 )
-from pulp_python.app.utils import parse_metadata
+from pulp_python.app.utils import parse_project_metadata, parse_release_metadata
 
 from bandersnatch.mirror import Mirror
 from bandersnatch.master import Master
@@ -51,6 +54,8 @@ def sync(remote_pk, repository_pk, mirror):
         )
 
     first_stage = PythonBanderStage(remote)
+    # import pydevd_pycharm
+    # pydevd_pycharm.settrace('localhost', port=3013, stdoutToServer=True, stderrToServer=True)
     DeclarativeVersion(first_stage, repository, mirror).create()
 
 
@@ -194,24 +199,31 @@ class PulpMirror(Mirror):
         Take the filtered package, separate into releases and
         create a Content Unit to put into the pipeline
         """
+        metadata = parse_project_metadata(pkg.info)
+        mother_package, _ = PythonPackage.objects.update_or_create(name=metadata.pop("name"), defaults=metadata)
+        sha256 = pulp_hashlib.new("sha256")
+        d_artifacts = []
         for version, dists in pkg.releases.items():
-            for package in dists:
-                entry = parse_metadata(pkg.info, version, package)
-                url = entry.pop("url")
+            for release in dists:
+                entry = parse_release_metadata(release)
+                url = entry["url"]
 
-                artifact = Artifact(sha256=entry.pop("sha256_digest"))
-                package = PythonPackageContent(**entry)
+                artifact = Artifact(sha256=entry["sha256_digest"])
 
-                da = DeclarativeArtifact(
+                d_artifacts.append(DeclarativeArtifact(
                     artifact,
                     url,
                     entry["filename"],
                     self.python_stage.remote,
                     deferred_download=self.deferred_download,
-                )
-                dc = DeclarativeContent(content=package, d_artifacts=[da])
+                ))
+        sorted_artifacts = sorted(d_artifacts, key=attrgetter("artifact.sha256"))
+        for art in sorted_artifacts:
+            sha256.update(art.artifact.sha256.encode())
+        package = PythonPackageContent(name=mother_package.name, count=len(d_artifacts), combined_hash=sha256.hexdigest(), package=mother_package)
+        dc = DeclarativeContent(content=package, d_artifacts=d_artifacts)
 
-                await self.python_stage.put(dc)
+        await self.python_stage.put(dc)
 
     def finalize_sync(self):
         """No work to be done currently"""

@@ -21,29 +21,40 @@ def parse_project_metadata(project):
     """
     package = {}
     package['name'] = project.get('name') or ""
-    package['metadata_version'] = project.get('metadata_version') or ""
-    package['summary'] = project.get('summary') or ""
-    package['description'] = project.get('description') or ""
-    package['keywords'] = project.get('keywords') or ""
-    package['home_page'] = project.get('home_page') or ""
-    package['download_url'] = project.get('download_url') or ""
     package['author'] = project.get('author') or ""
     package['author_email'] = project.get('author_email') or ""
+    package['bugtrack_url'] = project.get('bugtrack_url') or ""
+    package['classifiers'] = json.dumps(project.get('classifiers', []))
+    package['description'] = project.get('description') or ""
+    package['description_content_type'] = project.get('description_content_type') or ""
+    package['docs_url'] = project.get('docs_url') or ""
+    package['download_url'] = project.get('download_url') or ""
+    package['home_page'] = project.get('home_page') or ""
+    package['keywords'] = project.get('keywords') or ""
+    package['license'] = project.get('license') or ""
     package['maintainer'] = project.get('maintainer') or ""
     package['maintainer_email'] = project.get('maintainer_email') or ""
-    package['license'] = project.get('license') or ""
-    package['requires_python'] = project.get('requires_python') or ""
-    package['project_url'] = project.get('project_url') or ""
+    package['package_url'] = project.get('package_url') or ""
     package['platform'] = project.get('platform') or ""
-    package['supported_platform'] = project.get('supported_platform') or ""
+    package['project_url'] = project.get('project_url') or ""
+    package['project_urls'] = json.dumps(project.get('project_urls', {}))
+    package['release_url'] = project.get('release_url') or ""
     package['requires_dist'] = json.dumps(project.get('requires_dist', []))
-    package['provides_dist'] = json.dumps(project.get('provides_dist', []))
-    package['obsoletes_dist'] = json.dumps(project.get('obsoletes_dist', []))
-    package['requires_external'] = json.dumps(project.get('requires_external', []))
-    package['classifiers'] = json.dumps(project.get('classifiers', []))
+    package['requires_python'] = project.get('requires_python') or ""
+    package['summary'] = project.get('summary') or ""
+    package['version'] = project.get('version') or ""
 
     return package
 
+def parse_release_metadata(release):
+
+    package = {}
+
+    package['filename'] = release.get('filename') or ""
+    package['sha256_digest'] = release.get("digests", {}).get('sha256') or ""
+    package['url'] = release.get('url') or ""
+
+    return package
 
 def parse_metadata(project, version, distribution):
     """
