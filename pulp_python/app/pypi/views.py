@@ -51,7 +51,7 @@ class PyPIMixin:
     def get_distribution(path):
         """Finds the distribution associated with this base_path."""
         distro_qs = PythonDistribution.objects.select_related(
-            "repository", "publication", "publication__repository_version"
+            "repository", "publication", "publication__repository_version", "remote"
         )
         try:
             return distro_qs.get(base_path=path)
@@ -73,7 +73,15 @@ class PyPIMixin:
     def get_drvc(self, path):
         """Takes the base_path and returns the distribution, repository_version and content."""
         distro = self.get_distribution(path)
-        repo_ver = self.get_repository_version(distro)
+        if distro.remote:
+            try:
+                repo_ver = self.get_repository_version(distro)
+            except Http404:
+                repo_ver = None
+        else:
+            repo_ver = self.get_repository_version(distro)
+        if not repo_ver:
+            return distro, None, None
         content = self.get_content(repo_ver)
         return distro, repo_ver, content
 
@@ -97,6 +105,10 @@ class SimpleView(ViewSet, PyPIMixin):
     def retrieve(self, request, path, package):
         """Retrieves the simple api html page for a package."""
         distro, repo_ver, content = self.get_drvc(path)
+        if distro.remote:
+            if not content or not content.filter(name__iexact=package).exists():
+                url = f'{path}/simple/{package}/{path}.pass'
+                return redirect(urljoin(BASE_CONTENT_URL, url))
         if self.should_redirect(distro, repo_version=repo_ver):
             # Maybe this name needs to be normalized?
             return redirect(urljoin(BASE_CONTENT_URL, f'{path}/simple/{package}/'))

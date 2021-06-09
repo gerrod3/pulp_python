@@ -1,6 +1,6 @@
 from logging import getLogger
 
-from aiohttp.web import json_response
+from aiohttp.web import json_response, StreamResponse
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.db import models
 
@@ -11,9 +11,11 @@ from pulpcore.plugin.models import (
     Remote,
     Repository
 )
+from pulpcore.plugin.download import DownloaderFactory
 
 from pathlib import PurePath
 from .utils import python_content_to_json, PYPI_LAST_SERIAL, PYPI_SERIAL_CONSTANT
+from .download import SimpleDownloader
 
 log = getLogger(__name__)
 
@@ -170,6 +172,51 @@ class PythonRemote(Remote):
     keep_latest_packages = models.IntegerField(default=0)
     exclude_platforms = ArrayField(models.CharField(max_length=10, blank=True),
                                    choices=PLATFORMS, default=list)
+
+    def get_downloader(self, remote_artifact=None, url=None, **kwargs):
+        """Get the downloader needed to fetch remote artifact."""
+        base_path = getattr(self, "base_path", None)
+        if base_path and remote_artifact:
+            name = remote_artifact.content_artifact.relative_path
+            df = DownloaderFactory(self, {"https": SimpleDownloader, "http": SimpleDownloader})
+            return df.build(remote_artifact.url, base_path=base_path, project_name=name, **kwargs)
+        return super().get_downloader(remote_artifact, url, **kwargs)
+
+    def get_remote_artifact_url(self, relative_path=None):
+        """
+        Get the full URL for a RemoteArtifact from a relative path.
+
+        Args:
+            relative_path (str): The relative path of a RemoteArtifact
+        Raises:
+            ValueError: If relative_path starts with a '/'.
+        Returns:
+            str: A URL for a RemoteArtifact available at the Remote.
+        """
+        log.info(f"relative_path {relative_path}")
+        path = PurePath(relative_path)
+        if path.is_absolute():
+            raise ValueError("Relative path can't start with '/'. {0}".format(relative_path))
+        if path.suffix == ".pass":
+            log.info("Setting base_path on remote")
+            relative_path = relative_path[:-len(path.name)]
+            self.policy = "streamed"
+            setattr(self, "base_path", path.stem)
+        return super().get_remote_artifact_url(relative_path=relative_path)
+
+    def get_remote_artifact_content_type(self, relative_path=None):
+        """
+        Get the type of content that should be available at the relative path.
+        Args:
+            relative_path (str): The relative path of a RemoteArtifact
+        Returns:
+            Class: The Class of the content type that should be available at the relative path.
+        """
+        path = PurePath(relative_path)
+        fp = path.parts[0]
+        if fp == "simple" or fp == "pypi":
+            raise ValueError("Relative path isn't pointing to a package")
+        return PythonPackageContent
 
     class Meta:
         default_related_name = "%(app_label)s_%(model_name)s"

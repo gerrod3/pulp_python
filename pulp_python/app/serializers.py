@@ -46,6 +46,13 @@ class PythonDistributionSerializer(core_serializers.DistributionSerializer):
         allow_null=True,
     )
     base_url = serializers.SerializerMethodField(read_only=True)
+    remote = core_serializers.DetailRelatedField(
+        required=False,
+        help_text=_('Remote that can be used to fetch content when using pull-through caching.'),
+        view_name_pattern=r"remotes(-.*/.*)?-detail",
+        queryset=core_models.Remote.objects.all(),
+        allow_null=True
+    )
 
     def get_base_url(self, obj):
         """Gets the base url."""
@@ -74,7 +81,7 @@ class PythonDistributionSerializer(core_serializers.DistributionSerializer):
         return data
 
     class Meta:
-        fields = core_serializers.DistributionSerializer.Meta.fields + ('publication', )
+        fields = core_serializers.DistributionSerializer.Meta.fields + ('publication', 'remote')
         model = python_models.PythonDistribution
 
 
