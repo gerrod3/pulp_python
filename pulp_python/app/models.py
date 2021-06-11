@@ -1,3 +1,4 @@
+import requests
 from logging import getLogger
 
 from aiohttp.web import json_response
@@ -13,7 +14,9 @@ from pulpcore.plugin.models import (
 )
 
 from pathlib import PurePath
-from .utils import python_content_to_json, PYPI_LAST_SERIAL, PYPI_SERIAL_CONSTANT
+from pypi_simple import parse_filename
+from wheel_filename import parse_wheel_filename
+from .utils import python_content_to_json, PYPI_LAST_SERIAL, PYPI_SERIAL_CONSTANT, parse_project_metadata, get_project_metadata_from_artifact
 from pulpcore.plugin.repo_version_utils import remove_duplicates, validate_repo_version
 
 log = getLogger(__name__)
@@ -123,6 +126,18 @@ class PythonPackageContent(Content):
     project_urls = JSONField(default=dict)
     description_content_type = models.TextField()
 
+    @staticmethod
+    def init_from_artifact_and_relative_path(artifact, relative_path):
+        """Used when downloading package from pull-through cache."""
+        path = PurePath(relative_path)
+        metadata = get_project_metadata_from_artifact(path.name, artifact)
+        data = parse_project_metadata(vars(metadata))
+        data['packagetype'] = metadata.packagetype
+        data['version'] = metadata.version
+        data['filename'] = path.name
+        data["sha256"] = artifact.sha256
+        return PythonPackageContent(**data)
+
     def __str__(self):
         """
         Provide more useful repr information.
@@ -174,6 +189,42 @@ class PythonRemote(Remote):
     keep_latest_packages = models.IntegerField(default=0)
     exclude_platforms = ArrayField(models.CharField(max_length=10, blank=True),
                                    choices=PLATFORMS, default=list)
+
+    @staticmethod
+    def construct_url(filename):
+        """Build the redirect url for package on PyPI."""
+        name, _, ptype = parse_filename(filename)
+        if not name:
+            return None  # Failed to parse filename
+        # TODO Support more package types
+        if ptype == "wheel":
+            pwf = parse_wheel_filename(filename)
+            python_version = pwf.python_tags[0] if pwf else "py3"  # default python3 package
+            if python_version[1] == "y" and "py2" in python_version:  # Avoid cp, pp, etc..
+                python_version = "2.7" if python_version == "py2" else ".".join(python_version[2:])
+        elif ptype == "wininst":
+            python_version = filename.rsplit("py", 1)[1][:3]
+        else:
+            python_version = "source"
+        return f"packages/{python_version}/{name[0]}/{name}/{filename}"
+
+    def get_remote_artifact_url(self, relative_path=None):
+        """Get url for remote_artifact, special case for PyPI."""
+        path = PurePath(relative_path)
+        if path.parts[0] != "simple":
+            if "pypi.org" in self.url:
+                # PyPI hosts all of their packages at https://files.pythonhosted.org
+                if len(path.parts) == 1:
+                    # Construct the url needed from package filename
+                    url = self.construct_url(path.name)
+                    if url:
+                        return requests.head(f"https://files.pythonhosted.org/{url}").url
+                return f"https://files.pythonhosted.org/{relative_path}"
+        return super().get_remote_artifact_url(relative_path)
+
+    def get_remote_artifact_content_type(self, relative_path=None):
+        """Return PythonPackageContent."""
+        return PythonPackageContent
 
     class Meta:
         default_related_name = "%(app_label)s_%(model_name)s"

@@ -2,3 +2,5 @@ pulpcore>=3.13
 pkginfo
 packaging
 bandersnatch==4.4.0
+pypi-simple
+wheel-filename

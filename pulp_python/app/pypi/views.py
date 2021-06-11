@@ -1,4 +1,5 @@
 import logging
+import requests
 
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -19,8 +20,10 @@ from django.http.response import (
 )
 from drf_spectacular.utils import extend_schema
 from dynaconf import settings
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 from pathlib import PurePath
+from pypi_simple import DistributionPackage
+from pypi_simple.parse_stream import parse_links_stream_response
 
 from pulpcore.plugin.tasking import dispatch
 from pulp_python.app.models import (
@@ -90,6 +93,8 @@ class PyPIMixin:
     def get_drvc(self, path):
         """Takes the base_path and returns the distribution, repository_version and content."""
         distro = self.get_distribution(path)
+        if distro.remote and not distro.repository and not distro.publication:
+            return distro, None, None
         repo_ver = self.get_repository_version(distro)
         content = self.get_content(repo_ver)
         return distro, repo_ver, content
@@ -181,10 +186,29 @@ class SimpleView(ViewSet, PackageUploadMixin):
         names = content.order_by('name').values_list('name', flat=True).distinct().iterator()
         return StreamingHttpResponse(write_simple_index(names, streamed=True))
 
+    def pull_through_package_simple(self, package, path, remote):
+        """Gets the package's simple page from remote."""
+        def parse_url(link):
+            parsed = urlparse(link.url)
+            digest, _, value = parsed.fragment.partition('=')
+            href = link.text if "pypi.org" in remote.url else link.path
+            d_url = urljoin(BASE_CONTENT_URL, f'{path}/{href}')
+            return link.text, d_url, value if digest == 'sha256' else ''
+
+        url = remote.get_remote_artifact_url(f'simple/{package}/')
+        response = requests.get(url, stream=True)
+        links = parse_links_stream_response(response)
+        packages = (parse_url(link) for link in links)
+        return StreamingHttpResponse(write_simple_detail(package, packages, streamed=True))
+
     @extend_schema(summary="Get package simple page")
     def retrieve(self, request, path, package):
         """Retrieves the simple api html page for a package."""
         distro, repo_ver, content = self.get_drvc(path)
+        if distro.remote:
+            # Check if package is already present to determine if pull through needed
+            if not repo_ver or not content.filter(name__iexact=package).exists():
+                return self.pull_through_package_simple(package, path, distro.remote)
         if self.should_redirect(distro, repo_version=repo_ver):
             # Maybe this name needs to be normalized?
             return redirect(urljoin(BASE_CONTENT_URL, f'{path}/simple/{package}/'))

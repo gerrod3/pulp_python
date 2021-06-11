@@ -1,3 +1,7 @@
+import os
+import pkginfo
+import shutil
+import tempfile
 import json
 from collections import defaultdict
 from django.conf import settings
@@ -38,6 +42,21 @@ simple_detail_template = """<!DOCTYPE html>
 </html>
 """
 
+DIST_EXTENSIONS = {
+    ".whl": "bdist_wheel",
+    ".exe": "bdist_wininst",
+    ".egg": "bdist_egg",
+    ".tar.bz2": "sdist",
+    ".tar.gz": "sdist",
+    ".zip": "sdist",
+}
+
+DIST_TYPES = {
+    "bdist_wheel": pkginfo.Wheel,
+    "bdist_wininst": pkginfo.Distribution,
+    "bdist_egg": pkginfo.BDist,
+    "sdist": pkginfo.SDist,
+}
 
 def parse_project_metadata(project):
     """
@@ -106,6 +125,27 @@ def parse_metadata(project, version, distribution):
     package.update(parse_project_metadata(project))
 
     return package
+
+
+def get_project_metadata_from_artifact(filename, artifact):
+    """
+    Gets the metadata of a Python Package.
+
+    Raises ValueError if filename has an unsupported extension
+    """
+    # iterate through extensions since splitext does not support things like .tar.gz
+    extensions = list(DIST_EXTENSIONS.keys())
+    pkg_type_index = [filename.endswith(ext) for ext in extensions].index(True)
+    packagetype = DIST_EXTENSIONS[extensions[pkg_type_index]]
+    # Copy file to a temp directory under the user provided filename, we do this
+    # because pkginfo validates that the filename has a valid extension before
+    # reading it
+    with tempfile.TemporaryDirectory() as td:
+        temp_path = os.path.join(td, filename)
+        shutil.copy2(artifact.file.path, temp_path)
+        metadata = DIST_TYPES[packagetype](temp_path)
+        metadata.packagetype = packagetype
+        return metadata
 
 
 def python_content_to_json(base_path, content_query, version=None):
