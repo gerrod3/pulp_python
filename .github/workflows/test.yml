@@ -157,6 +157,10 @@ jobs:
           name: "docs.tar"
           path: "pulp_python/docs/docs.tar"
 
+      - name: Debugging S3
+        if: ${{ env.TEST == 's3' }}
+        uses: mxschmitt/action-tmate@v3
+
       - name: "Logs"
         if: always()
         run: |
